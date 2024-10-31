@@ -1,7 +1,5 @@
 FROM python:3.11
 
-ENV TESTNAME="chrome_test"
-
 WORKDIR /app
 
 COPY requirements.txt requirements.txt
@@ -19,4 +17,5 @@ RUN wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
 RUN dpkg -i google-chrome-stable_current_amd64.deb
 RUN apt install -f
 
-CMD ["python", "tests/$TESTNAME.py""]
+# To keep the container running
+CMD ["/bin/sh"]

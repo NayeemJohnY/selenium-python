@@ -8,6 +8,7 @@ on:
 
 env:
     DOCKER_IMAGE_NAME: sel-python
+    DOCKER_CONTAINER_NAME: sel-python-container
 
 jobs:
     build:
@@ -21,11 +22,14 @@ jobs:
             - name: Build the Docker image
               run: docker build -t ${DOCKER_IMAGE_NAME} .
                     
+            - name: Start the Container
+              run: docker run -i -d -v $(pwd):/app --name ${DOCKER_CONTAINER_NAME} ${DOCKER_IMAGE_NAME}
+
             - name: Run Test
-              run: docker run -i -d -v $(pwd):/app --name sel-python-test-container -e TESTNAME=${{inputs.testname}} ${DOCKER_IMAGE_NAME} 
+              run: docker exec -i ${DOCKER_CONTAINER_NAME} python TESTNAME=${{inputs.testname}}
             
             - name: Kill the container
               if: always()
               run: |
                 docker ps -a
-                docker rm -f $(docker ps -aqf "name=sel-python-test-container")
+                docker rm -f $(docker ps -aqf "name=${DOCKER_CONTAINER_NAME}")
