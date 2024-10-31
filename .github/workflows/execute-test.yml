@@ -1,0 +1,31 @@
+name: Execute Test
+
+on:
+    workflow_dispatch:
+        inputs:
+            testname:
+                description: Test File (under tests folder without .py)
+
+env:
+    DOCKER_IMAGE_NAME: sel-python
+
+jobs:
+    build:
+        name: test-execution
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout the repository source code
+              uses: actions/checkout@v4
+
+            - name: Build the Docker image
+              run: docker build -t ${DOCKER_IMAGE_NAME} --build-arg TESTNAME=${{inputs.testname}} .
+                    
+            - name: Run Test
+              run: docker run -it -v $(pwd):/app --name sel-python-test-container ${DOCKER_IMAGE_NAME}
+            
+            - name: Kill the container
+              if: always()
+              run: |
+                docker ps -a
+                docker rm -f $(docker ps -aqf "name=sel-python-test-container")
