@@ -1,6 +1,6 @@
-ENV TESTNAME="chrome_test"
-
 FROM python:3.11
+
+ENV TESTNAME="chrome_test"
 
 WORKDIR /app
 
