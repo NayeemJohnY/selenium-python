@@ -26,7 +26,7 @@ jobs:
               run: docker run -i -d -v $(pwd):/app --name ${DOCKER_CONTAINER_NAME} ${DOCKER_IMAGE_NAME}
 
             - name: Run Test
-              run: docker exec -i ${DOCKER_CONTAINER_NAME} python TESTNAME=${{inputs.testname}}
+              run: docker exec -i ${DOCKER_CONTAINER_NAME} python tests/${{inputs.testname}}.py
             
             - name: Kill the container
               if: always()
